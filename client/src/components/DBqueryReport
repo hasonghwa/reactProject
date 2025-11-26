@@ -1,0 +1,328 @@
+; INSERT INTO SEASON (SEASON_ID, SEASON) VALUES
+; (1, '봄'),
+; (2, '여름'),
+; (3, '가을'),
+; (4, '겨울');
+
+
+; CREATE TABLE PART (
+;     PART_ID INT PRIMARY KEY,
+;     KIND VARCHAR(50)
+    
+; );
+
+INSERT INTO PART (PART_ID, KIND) VALUES
+(1, '상의'),
+(2, '하의'),
+(3, '모자'),
+(4, '신발');
+
+SELECT * FROM PART
+
+
+CREATE TABLE COLOR (
+    COLOR_ID INT PRIMARY KEY,
+    COLOR VARCHAR(50) NOT NULL
+);
+
+INSERT INTO COLOR (COLOR_ID, COLOR) VALUES
+(1, '흰색'),
+(2, '검정'),
+(3, '회색'),
+(4, '빨강'),
+(5, '파랑'),
+(6, '노랑'),
+(7, '초록'),
+(8, '네이비'),
+(9, '베이지'),
+(10, '브라운'),
+(11, '핑크'),
+(12, '퍼플'),
+(13, '오렌지'),
+(14, '민트'),
+(15, '카키'),
+(16, '파스텔 핑크'),
+(17, '파스텔 블루'),
+(18, '파스텔 옐로우'),
+(19, '골드'),
+(20, '실버'),
+(21, '로즈골드'),
+(22, '네온 그린'),
+(23, '네온 핑크'),
+(24, '네온 오렌지'),
+(25, '올리브'),
+(26, '샌드'),
+(27, '테라코타');
+
+SELECT * FROM COLOR;
+
+
+
+CREATE TABLE CATEGORY (
+    CATEGORY_ID INT PRIMARY KEY,
+    CATEGORY VARCHAR(50) NOT NULL
+);
+
+INSERT INTO CATEGORY (CATEGORY_ID, CATEGORY) VALUES
+(1, '기본 색상'),
+(2, '인기 색상'),
+(3, '트렌디/특수');
+
+SELECT * FROM CATEGORY;
+
+
+
+CREATE TABLE STYLE (
+    STYLE_ID INT PRIMARY KEY,
+    STYLE VARCHAR(50) NOT NULL
+);
+
+INSERT INTO STYLE (STYLE_ID, STYLE) VALUES
+(1, '심플'),
+(2, '화려'),
+(3, '포멀(정장,오피스룩)'),
+(4, '캐주얼'),
+(5, '빈티지'),
+(6, '스트릿'),
+(7, '로맨틱(여성스러운)');
+
+SELECT * FROM STYLE;
+
+
+
+
+
+
+
+CREATE TABLE STYLE_RECOMMENDATION (
+    RECOMMEND_ID INT PRIMARY KEY AUTO_INCREMENT,
+    STYLE_ID INT NOT NULL,               -- (어떤 스타일인가?)
+    COLOR_ID INT NULL,                  -- (어떤 계절에 적용되는가? - 선택 사항)
+    RECOMMENDED_COLOR_ID INT NOT NULL,   -- (추천되는 색상 ID)
+    RECOMMENDED_PART_ID INT NOT NULL,    -- (추천 색상이 적용되는 부위 ID)
+    RECOMMEND_TEXT VARCHAR(255),         -- (추천 문구)
+    
+    FOREIGN KEY (STYLE_ID) REFERENCES STYLE(STYLE_ID),
+    FOREIGN KEY (SEASON_ID) REFERENCES SEASON(SEASON_ID),
+    FOREIGN KEY (RECOMMENDED_COLOR_ID) REFERENCES COLOR(COLOR_ID),
+    FOREIGN KEY (RECOMMENDED_PART_ID) REFERENCES PART(PART_ID)
+);
+
+
+
+
+
+-- 스타일별로 자주 사용되는 기본 색상의 목록 테이블
+
+CREATE TABLE STYLE_COLOR_WEIGHT (
+    STYLE_ID INT NOT NULL,
+    COLOR_ID INT NOT NULL,
+    WEIGHT DECIMAL(3, 2) NOT NULL DEFAULT 1.0, 
+    PRIMARY KEY (STYLE_ID, COLOR_ID),
+    FOREIGN KEY (STYLE_ID) REFERENCES STYLE(STYLE_ID),
+    FOREIGN KEY (COLOR_ID) REFERENCES COLOR(COLOR_ID)
+);
+
+select * from style_color_weight
+
+
+
+
+
+
+
+
+입을 옷 등록 INSERT
+create table clothHistory(
+HISTORY_ID INT PRIMARY KEY AUTO_INCREMENT,
+STYLE VARCHAR(50) NOT NULL,
+KIND VARCHAR(50) NOT NULL,
+CATEGORY VARCHAR(50) NOT NULL,
+COLOR VARCHAR(50) NOT NULL,
+TITLE VARCHAR(30),
+CONTENTS VARCHAR(500)
+);
+
+SELECT * FROM CLOTHHISTORY
+
+
+
+
+
+
+
+
+
+
+//수정 테이블
+-- ====================================================================
+-- 룩업 테이블 (Lookup Tables)
+-- 데이터의 일관성 및 효율성을 위해 ID 기반으로 정의되었습니다.
+-- ====================================================================
+
+-- 1. SEASON 테이블 (계절)
+DROP TABLE IF EXISTS SEASON;
+CREATE TABLE SEASON (
+    SEASON_ID INT PRIMARY KEY,
+    SEASON VARCHAR(50) NOT NULL
+);
+
+INSERT INTO SEASON (SEASON_ID, SEASON) VALUES
+(1, '봄'),
+(2, '여름'),
+(3, '가을'),
+(4, '겨울');
+
+
+-- 2. PART 테이블 (옷 부위 - 상의, 하의 등)
+DROP TABLE IF EXISTS PART;
+CREATE TABLE PART (
+    PART_ID INT PRIMARY KEY,
+    KIND VARCHAR(50) NOT NULL
+);
+
+INSERT INTO PART (PART_ID, KIND) VALUES
+(1, '상의'),
+(2, '하의'),
+(3, '모자'),
+(4, '신발');
+
+
+-- 3. COLOR 테이블 (색상)
+DROP TABLE IF EXISTS COLOR;
+CREATE TABLE COLOR (
+    COLOR_ID INT PRIMARY KEY,
+    COLOR VARCHAR(50) NOT NULL
+);
+
+INSERT INTO COLOR (COLOR_ID, COLOR) VALUES
+(1, '흰색'),
+(2, '검정'),
+(3, '회색'),
+(4, '빨강'),
+(5, '파랑'),
+(6, '노랑'),
+(7, '초록'),
+(8, '네이비'),
+(9, '베이지'),
+(10, '브라운'),
+(11, '핑크'),
+(12, '퍼플'),
+(13, '오렌지'),
+(14, '민트'),
+(15, '카키'),
+(16, '파스텔 핑크'),
+(17, '파스텔 블루'),
+(18, '파스텔 옐로우'),
+(19, '골드'),
+(20, '실버'),
+(21, '로즈골드'),
+(22, '네온 그린'),
+(23, '네온 핑크'),
+(24, '네온 오렌지'),
+(25, '올리브'),
+(26, '샌드'),
+(27, '테라코타');
+
+
+-- 4. CATEGORY 테이블 (색상 카테고리)
+DROP TABLE IF EXISTS CATEGORY;
+CREATE TABLE CATEGORY (
+    CATEGORY_ID INT PRIMARY KEY,
+    CATEGORY VARCHAR(50) NOT NULL
+);
+
+INSERT INTO CATEGORY (CATEGORY_ID, CATEGORY) VALUES
+(1, '기본 색상'),
+(2, '인기 색상'),
+(3, '트렌디/특수');
+
+
+-- 5. STYLE 테이블 (스타일)
+DROP TABLE IF EXISTS STYLE;
+CREATE TABLE STYLE (
+    STYLE_ID INT PRIMARY KEY,
+    STYLE VARCHAR(50) NOT NULL
+);
+
+INSERT INTO STYLE (STYLE_ID, STYLE) VALUES
+(1, '심플'),
+(2, '화려'),
+(3, '포멀(정장,오피스룩)'),
+(4, '캐주얼'),
+(5, '빈티지'),
+(6, '스트릿'),
+(7, '로맨틱(여성스러운)');
+
+
+-- ====================================================================
+-- 연결 및 보조 테이블 (Relationship Tables)
+-- ====================================================================
+
+-- 6. STYLE_RECOMMENDATION 테이블 (스타일별 추천 정보)
+DROP TABLE IF EXISTS STYLE_RECOMMENDATION;
+CREATE TABLE STYLE_RECOMMENDATION (
+    RECOMMEND_ID INT PRIMARY KEY AUTO_INCREMENT,
+    STYLE_ID INT NOT NULL,               -- (어떤 스타일인가?)
+    SEASON_ID INT NULL,                  -- (어떤 계절에 적용되는가? - 선택 사항)
+    RECOMMENDED_COLOR_ID INT NOT NULL,   -- (추천되는 색상 ID)
+    RECOMMENDED_PART_ID INT NOT NULL,    -- (추천 색상이 적용되는 부위 ID)
+    RECOMMEND_TEXT VARCHAR(255),         -- (추천 문구)
+    
+    FOREIGN KEY (STYLE_ID) REFERENCES STYLE(STYLE_ID),
+    FOREIGN KEY (SEASON_ID) REFERENCES SEASON(SEASON_ID),
+    FOREIGN KEY (RECOMMENDED_COLOR_ID) REFERENCES COLOR(COLOR_ID),
+    FOREIGN KEY (RECOMMENDED_PART_ID) REFERENCES PART(PART_ID)
+);
+
+
+-- 7. STYLE_COLOR_WEIGHT 테이블 (스타일별 색상 선호도/가중치)
+DROP TABLE IF EXISTS STYLE_COLOR_WEIGHT;
+CREATE TABLE STYLE_COLOR_WEIGHT (
+    STYLE_ID INT NOT NULL,
+    COLOR_ID INT NOT NULL,
+    WEIGHT DECIMAL(3, 2) NOT NULL DEFAULT 1.0,  -- 가중치 (1.0 기준)
+    PRIMARY KEY (STYLE_ID, COLOR_ID),
+    FOREIGN KEY (STYLE_ID) REFERENCES STYLE(STYLE_ID),
+    FOREIGN KEY (COLOR_ID) REFERENCES COLOR(COLOR_ID)
+);
+
+
+-- ====================================================================
+-- 메인 트랜잭션 테이블 (Main Transactional Table)
+-- 이전 요청에 따라 ID 기반으로 수정되었으며, USERID가 포함됩니다.
+-- ====================================================================
+
+-- 8. CLOTHHISTORY 테이블 (착장 기록)
+DROP TABLE IF EXISTS CLOTHHISTORY;
+CREATE TABLE CLOTHHISTORY (
+    HISTORY_ID INT PRIMARY KEY AUTO_INCREMENT,
+    
+    -- ID 컬럼 (외래 키)
+    STYLE_ID INT NOT NULL,          -- 스타일 ID (STYLE 테이블 참조)
+   
+    COLOR_ID INT NOT NULL,          -- 색상 ID (COLOR 테이블 참조)
+    CATEGORY_ID INT NOT NULL,       -- 색상 카테고리 ID (CATEGORY 테이블 참조)
+    
+    -- 기타 정보
+    KIND_STRING VARCHAR(255),       -- 부위 (다중 선택을 위해 콤마 구분된 문자열로 저장)
+    TITLE VARCHAR(30),
+    CONTENTS VARCHAR(500),
+    USERID VARCHAR(50) NOT NULL,    -- 사용자 ID (USER 테이블 참조)
+    
+    -- 외래 키 제약 조건 (참조 테이블이 생성되어 있다는 가정 하에)
+    FOREIGN KEY (STYLE_ID) REFERENCES STYLE(STYLE_ID),
+    
+    FOREIGN KEY (COLOR_ID) REFERENCES COLOR(COLOR_ID),
+    FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(CATEGORY_ID)
+);
+
+//색상 등록 테이블
+ CREATE TABLE INSERTCOLOR (
+			COLOR_ID INT PRIMARY KEY AUTO_INCREMENT,
+            COLOR_NAME VARCHAR(30) NOT NULL,
+            USERID VARCHAR(30) NOT NULL,
+            CATEGORY_ID INT,
+            FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(CATEGORY_ID)
+            );
+            SELECT * FROM INSERTCOLOR;
