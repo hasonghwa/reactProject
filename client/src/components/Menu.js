@@ -26,7 +26,7 @@ function Menu() {
           <ListItemIcon>
             <Home />
           </ListItemIcon>
-          <ListItemText primary="피드" />
+          <ListItemText primary="친구의 피드" />
         </ListItem>
         <ListItem button component={Link} to="/register">
           <ListItemIcon>

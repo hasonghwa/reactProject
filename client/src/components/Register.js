@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   TextField,
   Button,
@@ -87,6 +88,7 @@ const ALL_COLORS = [
 function Register() {
   const [files, setFile] = useState([]);
   const contentRef = useRef();
+  const navigate = useNavigate();
 
   // 2. 추가된 필드 상태 관리
   const [title, setTitle] = useState('');
@@ -149,12 +151,17 @@ function Register() {
     setFile(event.target.files);
   };
 
+  //내가 입은 옷 으로 가기
+  function fnClothHistory(){
+    navigate("/ClothHistoryList");
+  }
+
   // 기존 피드 추가 함수 (수정된 JWT 디코딩 함수 적용)
   function fnFeedAdd() {
-    if (files.length === 0) {
-      alert("이미지 첨부");
-      return;
-    }
+    // if (files.length === 0) {
+    //   alert("이미지 첨부");
+    //   return;
+    // }
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -176,12 +183,12 @@ function Register() {
       title: title,
       style: style,
       parts: parts,
-      categoryId: colorCategory, // ✅ 바로 CATEGORY_ID로 보낼 수 있음
-      id: selectedColor, // COLOR_ID
+      categoryId: colorCategory, 
+      id: selectedColor, 
     }
 
-    // 💡 참고: 서버 URL을 http://localhost:3015/feed/로 맞춥니다.
-    fetch("http://localhost:3015/feed/", {
+    //옷 추가 
+    fetch("http://localhost:3015/feed/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -191,9 +198,16 @@ function Register() {
       .then(res => res.json())
       .then(data => {
         console.log("Feed Insert Result:", data);
-        // 서버에서 반환된 insertId를 사용하여 파일 업로드
-        fnUploadFile(data.result && data.result[0] ? data.result[0].insertId : null);
+        // 🌟 파일이 있을 경우에만 업로드 함수를 호출하도록 변경
+        if (files.length > 0) {
+           fnUploadFile(data.result && data.result[0] ? data.result[0].insertId : null);
+        } else {
+           console.log("No files to upload.");
+        }
+        alert("추가되었습니다.");
+        fnClothHistory();
       })
+      
       .catch(err => {
         console.error("Feed Add Error:", err);
         alert("피드 등록 중 오류 발생!");

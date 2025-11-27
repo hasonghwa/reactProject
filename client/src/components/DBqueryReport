@@ -155,23 +155,7 @@ SELECT * FROM CLOTHHISTORY
 
 
 //수정 테이블
--- ====================================================================
--- 룩업 테이블 (Lookup Tables)
--- 데이터의 일관성 및 효율성을 위해 ID 기반으로 정의되었습니다.
--- ====================================================================
 
--- 1. SEASON 테이블 (계절)
-DROP TABLE IF EXISTS SEASON;
-CREATE TABLE SEASON (
-    SEASON_ID INT PRIMARY KEY,
-    SEASON VARCHAR(50) NOT NULL
-);
-
-INSERT INTO SEASON (SEASON_ID, SEASON) VALUES
-(1, '봄'),
-(2, '여름'),
-(3, '가을'),
-(4, '겨울');
 
 
 -- 2. PART 테이블 (옷 부위 - 상의, 하의 등)
@@ -252,8 +236,8 @@ INSERT INTO STYLE (STYLE_ID, STYLE) VALUES
 (4, '캐주얼'),
 (5, '빈티지'),
 (6, '스트릿'),
-(7, '로맨틱(여성스러운)');
-
+(7, '로맨틱(여성스러운)'),
+(8, '기타')
 
 -- ====================================================================
 -- 연결 및 보조 테이블 (Relationship Tables)
@@ -305,7 +289,7 @@ CREATE TABLE CLOTHHISTORY (
     CATEGORY_ID INT NOT NULL,       -- 색상 카테고리 ID (CATEGORY 테이블 참조)
     
     -- 기타 정보
-    KIND_STRING VARCHAR(255),       -- 부위 (다중 선택을 위해 콤마 구분된 문자열로 저장)
+    PART_ID INT,       -- 부위 (다중 선택을 위해 콤마 구분된 문자열로 저장)
     TITLE VARCHAR(30),
     CONTENTS VARCHAR(500),
     USERID VARCHAR(50) NOT NULL,    -- 사용자 ID (USER 테이블 참조)

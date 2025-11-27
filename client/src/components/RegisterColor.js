@@ -2,30 +2,38 @@ import React, { useState } from "react";
 import { Container, TextField, Button, MenuItem, Typography } from "@mui/material";
 
 const RegisterColor = () => {
-  const [color, setColor] = useState("");
+  const [colorName, setColor] = useState("");
   const [categoryId, setCategoryId] = useState("");
-    const userId = localStorage.getItem("token"); // 필요에 따라 사용자 ID를 가져오는 방법 수정
+  const token = localStorage.getItem("token");
+  const currentUserId = token; // 토큰 자체가 userId 값이라고 임시 가정
   const handleSubmit = async () => {
-    if (!color || !categoryId) {
+    if (!colorName || !categoryId) {
       alert("색상명과 카테고리를 모두 입력하세요.");
       return;
     }
 
-    try {
-      const res = await fetch("http://localhost:3015/feed"  , {
+
+    if (!currentUserId) {
+      alert("로그인 정보(토큰)가 없습니다.");
+      return;
+    }
+
+    try {     // 🌟 경로를 서버의 색상 등록 라우트 (/feed/regColor)로 수정합니다.
+      const res = await fetch("http://localhost:3015/feed/regColor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          color,
+          colorName,
+          userId: currentUserId, // 🌟 수정: 정의된 currentUserId 사용
           categoryId,
-          userId
+
         }),
       });
 
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
 
       alert("색상 등록 성공!");
       setColor("");
@@ -46,7 +54,7 @@ const RegisterColor = () => {
       <TextField
         fullWidth
         label="색상명 입력"
-        value={color}
+        value={colorName}
         onChange={(e) => setColor(e.target.value)}
         sx={{ mb: 2 }}
       />

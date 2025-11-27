@@ -58,11 +58,11 @@ router.post('/upload', upload.array('file'), async (req, res) => {
 //     }
 // })
 
-router.delete("/:feedId", authMiddleware, async (req, res) => {
-    let { feedId } = req.params;
+router.delete("/:historyId", authMiddleware, async (req, res) => {
+    let { historyId } = req.params;
     try {
-        let sql = "DELETE FROM TBL_FEED WHERE ID = ?";
-        let result = await db.query(sql, [feedId]);
+        let sql = "DELETE FROM CLOTHHISTORY WHERE HISTORY_ID = ?";
+        let result = await db.query(sql, [historyId]);
         res.json({
             result: result,
             msg: "삭제 완료"
@@ -73,29 +73,33 @@ router.delete("/:feedId", authMiddleware, async (req, res) => {
 })
 
 // 입을 옷 등록 (완성)
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
     try {
-        let { style, id, categoryId, title, content, userId, parts,     } = req.body;
+        let { style, id, categoryId, parts, title, content, userId } = req.body;
+
+        // 🌟 핵심 수정: parts (배열)를 문자열로 변환 (DB의 KIND_STRING 컬럼용)
+        const kindString = Array.isArray(parts) && parts.length > 0
+            ? parts.join(',') // 예: [1, 2] -> "1,2"
+            : null;
 
         let sql = `
       INSERT INTO CLOTHHISTORY
-      (STYLE_ID, COLOR_ID, CATEGORY_ID,  TITLE, CONTENTS, USERID, PART_ID)
+      (STYLE_ID, COLOR_ID, CATEGORY_ID,  PART_ID, TITLE, CONTENTS, USERID)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
 
         let params = [
-            style || null,          // STYLE_ID
-            id || null,          // COLOR_ID
-            categoryId || null,         // CATEGORY_ID
+            style || null,
+            id || null,
+            categoryId || null,
+            kindString,          // 4. KIND_STRING (문자열로 변환된 parts)
             title || null,
             content || null,
             userId,
-            parts || null,          // KIND_STRING
-            
-            
-            
-        ];
 
+
+        ];
+        console.log("CLOTHHISTORY INSERT Params:", params);
         let [historyResult] = await db.query(sql, params);
         const newHistoryId = historyResult.insertId;
 
@@ -106,9 +110,8 @@ router.post("/", async (req, res) => {
 
     } catch (error) {
         console.error("착장 기록 등록 실패:", error);
-        res.status(500).json({
-            msg: "error: 착장 기록 등록 실패"
-        });
+
+
     }
 });
 
@@ -127,6 +130,7 @@ router.get("/:ID", async (req, res) => {
                 S.STYLE AS STYLE_NAME,
                 C.CATEGORY AS CATEGORY_NAME,
                 CO.COLOR AS COLOR_NAME,
+                P.PART AS PART_NAME,
                 CH.TITLE,
                 CH.CONTENTS,
                 GROUP_CONCAT(FI.imgPath) AS IMAGES
@@ -134,8 +138,9 @@ router.get("/:ID", async (req, res) => {
             INNER JOIN STYLE S ON CH.STYLE_ID = S.STYLE_ID
             INNER JOIN CATEGORY C ON CH.CATEGORY_ID = C.CATEGORY_ID
             INNER JOIN COLOR CO ON CH.COLOR_ID = CO.COLOR_ID
+            LEFT JOIN PART P ON CH.PART_ID = P.PART_ID
             LEFT JOIN TBL_FEED_IMG FI ON FI.FEEDID = CH.HISTORY_ID
-            WHERE CH.USERID = ?
+            WHERE CH.USERID = 'test2'
             GROUP BY CH.HISTORY_ID
             ORDER BY CH.HISTORY_ID DESC
         `;
@@ -156,17 +161,17 @@ router.get("/:ID", async (req, res) => {
 })
 
 //색상 추가 
-router.post("/:ID", async (req, res) => {
+router.post("/regColor", async (req, res) => {
     let { colorName, userId, categoryId } = req.body;
-    
-    
+    console.log(userId);
+
     try {
-        let sql = "INSERT INTO INSERTCOLOR VALUES ( ?, ?,? )";
-        let result = await db.query(sql, [colorName, userId, categoryId ]);
-        console.log(result);
+        let sql = "INSERT INTO INSERTCOLOR(COLOR_NAME, USERID, CATEGORY_ID ) VALUES ( ?, ?,? )";
+        let result = await db.query(sql, [colorName, userId, categoryId]);
+        // console.log("dd");
         res.json({
             result,
-            msg : "success"
+            msg: "success"
 
         });
     } catch (error) {
