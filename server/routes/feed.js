@@ -116,7 +116,7 @@ router.post("/register", async (req, res) => {
 });
 
 
-//내가 입은 옷 
+// //내가 입은 옷 
 router.get("/:ID", async (req, res) => {
     console.log(`${req.protocol}://${req.get("host")}`);
     let { ID } = req.params;
@@ -178,6 +178,47 @@ router.post("/regColor", async (req, res) => {
         console.log(error);
     }
 })
+
+
+router.get("/", async (req, res) => {
+    // 클라이언트로부터 받은 필터링 변수들을 사용하지 않습니다.
+     
+
+    // SQL 쿼리: WHERE 조건 없이 모든 데이터를 JOIN하여 가져옵니다.
+    let sql = `SELECT F.FEED_ID,                 
+        S.STYLE, 
+        CO.COLOR, 
+        CA.CATEGORY, 
+        P.PART, 
+        F.TITLE, 
+        F.CONTENTS, 
+        F.USERID
+    FROM FRIENDSFEED F 
+    INNER JOIN STYLE S ON F.STYLE_ID = S.STYLE_ID
+    INNER JOIN COLOR CO ON F.COLOR_ID = CO.COLOR_ID
+    INNER JOIN CATEGORY CA ON F.CATEGORY_ID = CA.CATEGORY_ID
+    INNER JOIN PART P ON F.PART_ID = P.PART_ID`; // (선택 사항) 최근 등록된 순서로 정렬 (ID 또는 등록일 기준)
+     let [list] = await db.query(sql);
+    // db.query의 두 번째 인자는 빈 배열 [] 또는 아예 생략하여 바인딩할 값이 없음을 명시합니다.
+    
+    
+    try {
+       
+        
+        // 결과 반환
+        res.json({
+            result: "success",
+            list: list
+        });
+    } catch (error) {
+         
+        console.error("DB Query Error:", error); 
+        res.status(500).json({ 
+            success: false,
+            message: "전체 목록을 불러오는 중 오류가 발생했습니다."
+        });
+    }
+});
 
 
 module.exports = router;

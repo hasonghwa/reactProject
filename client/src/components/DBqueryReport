@@ -310,3 +310,27 @@ CREATE TABLE CLOTHHISTORY (
             FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(CATEGORY_ID)
             );
             SELECT * FROM INSERTCOLOR;
+
+
+
+            create table friendsFeed(
+ FEED_ID INT PRIMARY KEY AUTO_INCREMENT,
+    
+    -- ID 컬럼 (외래 키)
+    STYLE_ID INT NOT NULL,          -- 스타일 ID (STYLE 테이블 참조)
+   
+    COLOR_ID INT NOT NULL,          -- 색상 ID (COLOR 테이블 참조)
+    CATEGORY_ID INT NOT NULL,       -- 색상 카테고리 ID (CATEGORY 테이블 참조)
+    
+    -- 기타 정보
+    PART_ID INT,       -- 부위 (다중 선택을 위해 콤마 구분된 문자열로 저장)
+    TITLE VARCHAR(30),
+    CONTENTS VARCHAR(500),
+    USERID VARCHAR(50) NOT NULL,    -- 사용자 ID (USER 테이블 참조)
+    
+    -- 외래 키 제약 조건 (참조 테이블이 생성되어 있다는 가정 하에)
+    FOREIGN KEY (STYLE_ID) REFERENCES STYLE(STYLE_ID),
+    
+    FOREIGN KEY (COLOR_ID) REFERENCES COLOR(COLOR_ID),
+    FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(CATEGORY_ID)
+)
