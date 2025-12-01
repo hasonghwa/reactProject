@@ -70,7 +70,7 @@ function ClothHistoryList() {
       return;
     }
 
-  
+
 
 
     setLoading(true);
@@ -114,7 +114,7 @@ function ClothHistoryList() {
   };
 
 
-  
+
   useEffect(() => {
     if (!ID) {
       setLoading(false);
@@ -177,8 +177,8 @@ function ClothHistoryList() {
       </Typography>
 
 
-      
-      <Grid container spacing={3} xs={{cursor:'pointer'}}>
+
+      <Grid container spacing={3} xs={{ cursor: 'pointer' }}>
         {clothList.map((cloth) => (
           <Grid item xs={12} sm={6} md={4} key={cloth.HISTORY_ID}>
             <Card
@@ -191,12 +191,13 @@ function ClothHistoryList() {
                   height="180"
                   image={cloth.IMAGES[0]} // 첫 번째 이미지 표시
                   alt={cloth.TITLE}
-                  style={{cursor: 'pointer'}}
+                  style={{ cursor: 'pointer' }}
                 />
+
               )}
               <CardContent>
                 <Typography variant="h6">{cloth.TITLE}</Typography>
-                <Box sx={{ mb: 1 ,cursor: 'pointer'}}>
+                <Box sx={{ mb: 1, cursor: 'pointer' }}>
                   <Typography variant="body2" color="text.secondary">
                     스타일: {cloth.STYLE_NAME}
                   </Typography>
@@ -236,12 +237,16 @@ function ClothHistoryList() {
         <DialogContent dividers>
           <Box sx={{ mb: 2 }}>
             {/* 이미지 표시 (모든 이미지 순회 가능하도록 변경 고려) */}
-            {selectedCloth?.IMAGES?.length > 0 && (
+            {selectedCloth?.IMAGES?.length > 0 ? (
               <img
                 src={selectedCloth.IMAGES[0]} // 첫 번째 이미지
                 alt={selectedCloth.TITLE}
                 style={{ width: '100%', maxHeight: '400px', objectFit: 'contain' }}
               />
+            ) : (
+              <Typography variant="subtitle2" color="text.disabled" align="center" sx={{ p: 3, border: '1px dashed #ccc' }}>
+                등록된 이미지가 없습니다.
+              </Typography>
             )}
           </Box>
 
@@ -249,7 +254,7 @@ function ClothHistoryList() {
             {selectedCloth?.CONTENTS}
           </Typography>
 
-          <Box sx={{ mt: 2, p: 1, borderTop: '1px solid #eee'}}>
+          <Box sx={{ mt: 2, p: 1, borderTop: '1px solid #eee' }}>
             <Typography variant="body2" color="text.secondary">
               스타일: {selectedCloth?.STYLE_NAME}
             </Typography>
@@ -282,44 +287,43 @@ function ClothHistoryList() {
 
 
           <Button onClick={() => {
-          // 1. HISTORY_ID 추출
-          const historyIdToDelete = selectedCloth?.HISTORY_ID;
+            // 1. HISTORY_ID 추출
+            const historyIdToDelete = selectedCloth?.HISTORY_ID;
 
-          // 🚨 HISTORY_ID 콘솔 출력 위치 🚨
-          console.log("삭제할 HISTORY_ID:", historyIdToDelete);
-        
-          if (!historyIdToDelete) {
-            alert("삭제할 항목의 ID를 찾을 수 없습니다.");
-            return;
-          }
+            // 🚨 HISTORY_ID 콘솔 출력 위치 🚨
+            console.log("삭제할 HISTORY_ID:", historyIdToDelete);
 
-          // 2. 삭제 요청
-          fetch(`${API_URL}/${historyIdToDelete}`, { // HISTORY_ID를 URL 경로에 포함
-            method: "DELETE",
-            headers: {
-              "Authorization": "Bearer " + localStorage.getItem("token")
+            if (!historyIdToDelete) {
+              alert("삭제할 항목의 ID를 찾을 수 없습니다.");
+              return;
             }
-          })
-            .then(res => {
-              if (!res.ok) {
-                throw new Error('서버 응답 오류로 삭제 실패');
+
+            // 2. 삭제 요청
+            fetch(`${API_URL}/${historyIdToDelete}`, { // HISTORY_ID를 URL 경로에 포함
+              method: "DELETE",
+              headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
               }
-              return res.json();
             })
-            .then(data => {
-              alert("삭제되었습니다!");
+              .then(res => {
+                if (!res.ok) {
+                  throw new Error('서버 응답 오류로 삭제 실패');
+                }
+                return res.json();
+              })
+              .then(data => {
+                alert("삭제되었습니다!");
 
-              setOpen(false); // 모달 닫기
+                setOpen(false); // 모달 닫기
 
-              // 3. 목록 갱신
-              fetchClothList(); // 👈 수정된 목록 갱신 함수 호출
-            })
-            .catch(error => {
-              console.error("삭제 중 오류 발생:", error);
-              alert("삭제 중 오류가 발생했습니다.");
-            });
-        }} variant='contained' color="primary">삭제</Button>
-        
+                // 3. 목록 갱신
+                fetchClothList(); // 👈 수정된 목록 갱신 함수 호출
+              })
+              .catch(error => {
+                console.error("삭제 중 오류 발생:", error);
+                alert("삭제 중 오류가 발생했습니다.");
+              });
+          }} variant='contained' color="primary">삭제</Button>
         </Box>
       </Dialog>
     </Container>

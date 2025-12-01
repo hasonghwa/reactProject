@@ -220,5 +220,30 @@ router.get("/", async (req, res) => {
     }
 });
 
+// 내 소개 수정
+router.put('/intro', authMiddleware, async (req, res) => { // authMiddleware는 인증 미들웨어
+    const { newIntro } = req.body;
+    const userIdFromToken = req.user.userId; // authMiddleware에서 설정된 사용자 ID
+    // console.log(newIntro, userIdFromToken);
+    if (!newIntro) {
+        return res.status(400).json({ msg: '새 소개 내용이 필요합니다.' });
+    }
+
+    try {
+        // 🚨 중요: DB 쿼리 문은 실제 테이블 및 컬럼명에 맞게 수정해야 합니다.
+        const sql = `UPDATE USER SET INTRO = ? WHERE USERID = ?`; 
+        const [result] = await db.query(sql, [newIntro, userIdFromToken]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ msg: '사용자를 찾을 수 없거나 변경된 내용이 없습니다.' });
+        }
+
+        res.json({ result: 'success', msg: '소개 업데이트 성공' });
+    } catch (error) {
+        console.error('소개 업데이트 DB 오류:', error);
+        res.status(500).json({ msg: '서버 내부 오류로 업데이트 실패' });
+    }
+});
+
 
 module.exports = router;

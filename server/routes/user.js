@@ -17,7 +17,7 @@ router.post("/join", async (req, res) => {
     try {
         //let hashPwd = 담아두는 곳
         let hashPwd = await bcrypt.hash(pwd, 10);
-        console.log("해시된 비번",hashPwd);
+        // console.log("해시된 비번",hashPwd);
         let sql = "INSERT INTO USER"
             + " (USERID, PWD, NICKNAME, PHONE, NAME, BIRTH) "
             + " VALUES (?, ?, ?, ?, ?, ?)";

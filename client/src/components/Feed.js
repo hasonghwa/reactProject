@@ -142,7 +142,7 @@ function Feed() {
                 
                 <Box sx={{ mb: 1, mt: 1 }}>
                   <Typography variant="body2" color="text.secondary">
-                    스타일: **{feed.STYLE}**
+                    스타일: {feed.STYLE}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     옷 부위: {feed.PART}
@@ -150,9 +150,9 @@ function Feed() {
                   <Typography variant="body2" color="text.secondary">
                     색상: {feed.COLOR}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  {/* <Typography variant="body2" color="text.secondary">
                     카테고리: {feed.CATEGORY}
-                  </Typography>
+                  </Typography> */}
                 </Box>
                 <Typography variant="body2">{feed.CONTENTS}</Typography>
               </CardContent>

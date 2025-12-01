@@ -54,7 +54,7 @@ function Login() {
                 navigate("/feed");
           
               }else{
-                alert("로그인 실패!");
+                console.log("로그인 실패");
               }
         })
 

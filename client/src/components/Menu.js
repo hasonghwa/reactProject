@@ -35,12 +35,12 @@ function Menu() {
           <ListItemText primary="입을 옷 등록" />
         </ListItem>
 
-        <ListItem button component={Link} to="/registercolor">
+        {/* <ListItem button component={Link} to="/registercolor">
           <ListItemIcon>
             <Add />
           </ListItemIcon>
           <ListItemText primary="색상등록" />
-        </ListItem>
+        </ListItem> */}
         <ListItem button component={Link} to="/mypage">
           <ListItemIcon>
             <AccountCircle />
