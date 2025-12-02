@@ -114,7 +114,7 @@ function Feed() {
   return (
     <Container sx={{ marginTop: 4 }}>
       <Typography variant="h4" gutterBottom>
-        👥 친구 착장 기록 전체 목록
+        👥 <br/>
       </Typography>
 
       

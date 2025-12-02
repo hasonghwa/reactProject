@@ -42,8 +42,9 @@ router.get("/:userId", async (req, res) => {
 
     try {
         let sql =
-            "SELECT U.*, IFNULL(T.CNT,0) CNT" +
+            "SELECT U.*, P.*, IFNULL(T.CNT,0) CNT" +
             " FROM USER U " +
+            "INNER JOIN PROFILE_IMG P ON P.USERID = U.USERID " +
             "LEFT JOIN ( " +
             "SELECT USERID, COUNT(*) CNT " +
             "FROM TBL_FEED " +
@@ -77,11 +78,13 @@ router.post("/login", async (req, res) => {
             if (match) {
                 msg = list[0].NICKNAME + "님 환영합니다.";
                 result = "success";
+                
 
                 let user = {
                     userId: list[0].USERID,
                     name: list[0].NAME,
-                    status: "A" // 권한 일단 하드코딩(db에 없어서..)
+                    status: "A" ,
+                    nickName: list[0].NICKNAME, // <- 여기 추가
                     // 권한 등 필요한 정보 추가
                 };
 

@@ -1,218 +1,201 @@
 import React, { useEffect, useState } from 'react';
 import { 
-    Container, 
-    Typography, 
-    Box, 
-    Avatar, 
-    Grid, 
-    Paper, 
-    // 👇 추가된 항목
-    Dialog, 
-    DialogTitle, 
-    DialogContent, 
-    DialogActions,
-    Button, 
-    TextField,
-    IconButton 
+    Container, Typography, Box, Avatar, Paper, 
+    Dialog, DialogTitle, DialogContent, DialogActions,
+    Button, TextField, IconButton, Stack
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit'; // 수정 아이콘 추가
-import { jwtDecode } from "jwt-decode";
+import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const API_BASE_URL = "http://localhost:3015";
 
 function MyPage() {
-    let [user, setUser] = useState(null); // 초기 상태를 null로 설정
-    let navigate = useNavigate();
-
-    
+    const [user, setUser] = useState(null);
+    const [avatarUrl, setAvatarUrl] = useState("");
+    const [selectedFile, setSelectedFile] = useState(null);
     const [editOpen, setEditOpen] = useState(false);
     const [newIntro, setNewIntro] = useState('');
-    const [currentUserId, setCurrentUserId] = useState(null); // 토큰에서 추출한 userId 저장
+    const [currentUserId, setCurrentUserId] = useState(null);
 
-    // --- 사용자 정보 로드 함수 ---
-    const fetchUserData = (userId) => {
-        fetch(`${API_BASE_URL}/user/${userId}`)
-            .then(res => {
-                if (!res.ok) throw new Error('Failed to fetch user data');
-                return res.json();
-            })
-            .then(data => {
-                setUser(data.user);
-                setNewIntro(data.user.INTRO || ''); // 현재 소개를 수정 텍스트 필드에 미리 채우기
-            })
-            .catch(error => {
-                console.error("User data fetch error:", error);
-                // 에러 처리
-            });
-    };
+    const navigate = useNavigate();
 
-    // --- 초기 로드 및 토큰 확인 ---
+    // --- 토큰에서 userId 추출 & 초기 데이터 로드 ---
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                const userId = decoded.userId;
-                setCurrentUserId(userId); // 현재 userId 저장
-                fetchUserData(userId);
-            } catch (e) {
-                console.error("JWT decoding failed:", e);
-                alert("토큰이 유효하지 않습니다.");
-                navigate("/");
-            }
-        } else {
-            alert("로그인 하십시오");
+        if (!token) return navigate("/");
+
+        try {
+            const decoded = jwtDecode(token);
+            const userId = decoded.userId;
+            setCurrentUserId(userId);
+            fetchUserData(userId);
+        } catch (e) {
+            console.error("JWT decoding failed:", e);
             navigate("/");
         }
     }, [navigate]);
 
-    // --- 소개 수정 핸들러 ---
-
-    const handleEditOpen = () => {
-        setNewIntro(user?.INTRO || ''); // 현재 소개 내용을 모달에 로드
-        setEditOpen(true);
+    const fetchUserData = (userId) => {
+        fetch(`${API_BASE_URL}/user/${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.user);
+                setUser(data.user);
+                // setAvatarUrl(data.user.imgPath);
+                if (data.user.PROFILE_IMG) {
+                    setAvatarUrl(`${API_BASE_URL}/${data.user.PROFILE_IMG}?t=${new Date().getTime()}`);
+                } else {
+                    setAvatarUrl("");
+                }
+                setNewIntro(data.user.INTRO || "");
+            })
+            .catch(err => console.error("Fetch user error:", err));
     };
 
-    const handleEditClose = () => {
-        setEditOpen(false);
-    };
-
-    const handleIntroSave = () => {
-        if (!currentUserId) {
-            alert("사용자 ID를 찾을 수 없습니다.");
-            return;
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
+            setAvatarUrl(URL.createObjectURL(e.target.files[0]));
         }
-     
+    };
 
-        // 🚨 중요: 백엔드에서 사용자 소개(INTRO)를 수정하는 PUT/PATCH API 경로가 필요합니다.
+    const handleUploadAvatar = async () => {
+        if (!selectedFile) return alert("파일을 선택해주세요.");
 
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        try {
+            const token = localStorage.getItem("token");
+            const res = await fetch(`${API_BASE_URL}/feed/putImage`, {
+                method: "PUT",
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData
+            });
+
+            if (!res.ok) throw new Error("업로드 실패");
+
+            const data = await res.json();
+            if (data.result === "success") {
+                alert("프로필 이미지가 업데이트되었습니다.");
+                setSelectedFile(null);
+                setAvatarUrl(`${API_BASE_URL}/${data.imgPath}?t=${new Date().getTime()}`);
+                if (currentUserId) fetchUserData(currentUserId);
+            } else {
+                alert("프로필 업로드 실패");
+            }
+        } catch (err) {
+            console.error("Upload error:", err);
+            alert("업로드 중 오류 발생");
+        }
+    };
+
+    const handleEditOpen = () => setEditOpen(true);
+    const handleEditClose = () => setEditOpen(false);
+
+    const handleIntroSave = async () => {
+        if (!currentUserId) return alert("사용자 ID가 없습니다.");
 
         const token = localStorage.getItem("token");
-        console.log("Saving Intro. UserID:", currentUserId); // 👈 로그 1
-    
-        fetch(`${API_BASE_URL}/feed/intro`, {
-            method: 'PUT', // 또는 PATCH
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // 인증 토큰 포함
-            },
-            body: JSON.stringify({
-                userId: currentUserId, // 백엔드에서 인증되지만, 명시적으로 포함
-                newIntro: newIntro
-            })
-        })
-        .then(res => {
-            if (!res.ok) {
-                
-                throw new Error('소개 수정 실패');
-            }
-            return res.json();
-        })
-        .then(data => {
-            if (data.result === 'success') {
-                alert('소개가 성공적으로 업데이트되었습니다.');
-                fetchUserData(currentUserId); // 업데이트된 데이터 다시 불러오기
+        try {
+            const res = await fetch(`${API_BASE_URL}/feed/intro`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ newIntro })
+            });
+            const data = await res.json();
+            if (data.result === "success") {
+                alert("소개가 수정되었습니다.");
+                fetchUserData(currentUserId);
                 handleEditClose();
             } else {
-                alert('소개 업데이트 실패: ' + (data.msg || '알 수 없는 오류'));
+                alert("소개 수정 실패");
             }
-        })
-        .catch(error => {
-            console.error('Update error:', error);
-            alert(`소개 수정 중 오류 발생: ${error.message}`);
-        });
+        } catch (err) {
+            console.error("Intro update error:", err);
+            alert("소개 수정 중 오류 발생");
+        }
     };
 
-
-    if (!user) {
-        return (
-            <Container maxWidth="md" sx={{ textAlign: 'center', mt: 5 }}>
-                <Typography>사용자 정보를 불러오는 중...</Typography>
-            </Container>
-        );
-    }
+    if (!user) return <Container sx={{ textAlign: "center", mt: 5 }}><Typography>로딩중...</Typography></Container>;
 
     return (
-        <Container maxWidth="md">
-            <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="flex-start"
-                minHeight="100vh"
-                sx={{ padding: '20px' }}
-            >
-                <Paper elevation={3} sx={{ padding: '20px', borderRadius: '15px', width: '100%' }}>
+        <Container maxWidth="sm">
+            <Paper sx={{ p: 4, mt: 5, textAlign: "center", borderRadius: 3, boxShadow: 3 }}>
+                
+                {/* 프로필 이미지 */}
+                <Box sx={{ mb: 3 }}>
                     
-                    {/* 프로필 상단 */}
-                    <Box display="flex" flexDirection="column" alignItems="center" sx={{ marginBottom: 3 }}>
-                        <Avatar
-                            alt="프로필 이미지"
-                            src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e" // 프로필 이미지 경로
-                            sx={{ width: 100, height: 100, marginBottom: 2 }}
-                        />
-                        <Typography variant="h5">{user?.NICKNAME}</Typography>
-                        @{user?.USERID}
-                    </Box>
-                    
-                    {/* 팔로우/게시물 정보 */}
-                    <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                        <Grid item xs={4} textAlign="center">
-                            <Typography variant="h6">팔로워</Typography>
-                            <Typography variant="body1">{user?.FOLLOWER || 0}</Typography>
-                        </Grid>
-                        <Grid item xs={4} textAlign="center">
-                            <Typography variant="h6">팔로잉</Typography>
-                            <Typography variant="body1">{user?.FOLLOWING || 0}</Typography>
-                        </Grid>
-                        <Grid item xs={4} textAlign="center">
-                            <Typography variant="h6">게시물</Typography>
-                            <Typography variant="body1">{user?.CNT || 0}</Typography>
-                        </Grid>
-                    </Grid>
-                    
-                    {/* 내 소개 섹션 (클릭 가능) */}
-                    <Box sx={{ marginTop: 3, borderTop: '1px solid #eee', pt: 2 }}>
-                        <Box display="flex" justifyContent="space-between" alignItems="center">
-                            <Typography variant="h6">내 소개</Typography>
-                            <IconButton onClick={handleEditOpen} size="small" aria-label="edit intro">
-                                <EditIcon fontSize="small" />
-                            </IconButton>
-                        </Box>
-                        
-                        {/* 👇 소개 내용 표시 */}
-                        <Typography 
-                            variant="body1" 
-                            onClick={handleEditOpen} // 텍스트를 클릭해도 모달 열기
-                            sx={{ cursor: 'pointer', mt: 1, p: 1, borderRadius: 1, backgroundColor: '#f9f9f9' }}
+                    <Avatar 
+                        key={avatarUrl}
+                        alt="프로필 이미지"
+                        src={user.imgPath || "https://via.placeholder.com/100"}
+                        sx={{ width: 100, height: 100, mb: 2, mx: 'auto' }}
+                    /> 
+                    <Stack direction="row" spacing={2} justifyContent="center" alignItems="center" sx={{ mt: 1 }}>
+                        <Button
+                            variant="outlined"
+                            component="label"
+                            sx={{ borderRadius: 2 , color : '#457b9d' }}
                         >
-                            {user?.INTRO || "클릭하여 소개를 추가하세요."}
-                        </Typography>
-                    </Box>
-                </Paper>
-            </Box>
+                            이미지 선택
+                            <input 
+                                type="file" 
+                                accept="image/*" 
+                                hidden
+                                onChange={handleFileChange}
+                            />
+                        </Button>
+                        <Button
+                            variant="contained"
+                            sx={{ borderRadius: 2 , background : '#457b9d'}}
+                            onClick={handleUploadAvatar}
+                            disabled={!selectedFile}
+                        >
+                            업로드
+                        </Button>
+                    </Stack>
+                </Box>
 
-            {/* 👇 [추가] 내 소개 수정 Dialog */}
+                {/* 유저 정보 */}
+                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{user.NICKNAME}</Typography>
+                <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>@{user.USERID}</Typography>
+
+                {/* 소개 */}
+                <Box sx={{ mt: 3, borderTop: "1px solid #eee", pt: 2, textAlign: 'left' }}>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Typography variant="h6">내 소개</Typography>
+                        <IconButton onClick={handleEditOpen} color="primary">
+                            <EditIcon />
+                        </IconButton>
+                    </Box>
+                    <Typography variant="body1" sx={{ mt: 1, whiteSpace: 'pre-line' }}>
+                        {user.INTRO || "소개를 추가하세요."}
+                    </Typography>
+                </Box>
+            </Paper>
+
+            {/* 소개 수정 다이얼로그 */}
             <Dialog open={editOpen} onClose={handleEditClose} fullWidth maxWidth="sm">
                 <DialogTitle>소개 수정</DialogTitle>
                 <DialogContent>
                     <TextField
-                        autoFocus
-                        margin="dense"
-                        label="새 소개 내용"
-                        type="text"
+                        label="새 소개"
                         fullWidth
                         multiline
                         rows={4}
-                        variant="outlined"
                         value={newIntro}
                         onChange={(e) => setNewIntro(e.target.value)}
+                        sx={{ mt: 1 }}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleEditClose} color="error">취소</Button>
-                    <Button onClick={handleIntroSave} variant="contained" color="primary">저장</Button>
+                    <Button onClick={handleEditClose} color="error" variant="outlined" sx={{ borderRadius: 2 }}>취소</Button>
+                    <Button onClick={handleIntroSave} variant="contained" color="primary" sx={{ borderRadius: 2 }}>저장</Button>
                 </DialogActions>
             </Dialog>
         </Container>

@@ -1,97 +1,156 @@
 import React from 'react';
-import { Drawer, List, ListItem, ListItemText, Typography, Toolbar, ListItemIcon } from '@mui/material';
-import { Home, Add, AccountCircle, ExitToApp } from '@mui/icons-material'; // 🌟 ExitToApp 아이콘 추가
-import { Link, useNavigate } from 'react-router-dom'; // 🌟 useNavigate Hook 추가
-import Mui from './mui'; // Mui 컴포넌트 임포트 유지
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Toolbar,
+  ListItemIcon,
+  Divider
+} from '@mui/material';
+import { Home, Add, AccountCircle, ExitToApp, Checkroom } from '@mui/icons-material';
+import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode }  from 'jwt-decode';
 
 function Menu() {
-  const navigate = useNavigate(); // useNavigate Hook 사용 선언
-  
-  // 🌟 로그아웃 처리 함수 정의
-  const handleLogout = () => {
-    const isConfirmed = window.confirm("로그아웃 하시겠습니까?");
+  const navigate = useNavigate();
 
-    if(isConfirmed){
-       // 1. 로컬 저장소에서 사용자 인증 토큰 제거
-    localStorage.removeItem("token");
-    
-    // 2. 알림 메시지 출력
-    
-    alert("로그아웃 되었습니다.");
-    
-    // 3. 로그인 페이지 또는 홈 페이지로 리디렉션
-    navigate("/"); 
-    
-  }else{
-    return;
+  const token = localStorage.getItem("token");
+  let nickName = "";
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      console.log("Decoded JWT:", decoded);
+      nickName = decoded.nickName || "";
+    } catch (e) {
+      console.error("JWT decoding failed:", e);
+    }
   }
-    
+
+  const handleLogout = () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      localStorage.removeItem("token");
+      alert("로그아웃 되었습니다.");
+      navigate("/");
+    }
   };
-  
+
   return (
     <Drawer
       variant="permanent"
       sx={{
-        width: 240, 
+        width: 240,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          width: 240, 
+          width: 240,
           boxSizing: 'border-box',
+          backgroundColor: '#f5f5f5ff', // 연한 회색 배경
+          borderRight: '1px solid #ddd',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.05)',
         },
       }}
     >
       <Toolbar />
-      <Typography variant="h6" component="div" sx={{ p: 2 }}>
-        SNS 메뉴
+
+      <Typography
+        variant="h6"
+        component="div"
+        sx={{
+          p: 2,
+          fontFamily: "'Playfair Display', serif",
+          fontWeight: 'bold',
+          color: '#333', // 텍스트 짙은 회색
+          textAlign: 'center',
+          lineHeight: 1.4,
+        }}
+      >
+        ᓚᘏᗢ 환영합니다! <br /> {nickName}님
       </Typography>
-      <List>
+
+      <List sx={{ p: 2 }}>
         {/* 친구의 피드 */}
-        <ListItem button component={Link} to="/feed">
-          <ListItemIcon>
-            <Home />
-          </ListItemIcon>
-          <ListItemText primary="친구의 피드" />
-        </ListItem>
-        
-        {/* 입을 옷 등록 */}
-        <ListItem button component={Link} to="/register">
-          <ListItemIcon>
-            <Add />
-          </ListItemIcon>
-          <ListItemText primary="입을 옷 등록" />
+        <ListItem
+          button
+          component={Link}
+          to="/feed"
+          sx={{
+            borderRadius: 3,
+            mb: 1,
+            transition: '0.3s',
+            '&:hover': { backgroundColor: '#d0f0fd', transform: 'scale(1.02)' }, // 연한 블루 포인트
+          }}
+        >
+          <ListItemIcon><Home sx={{ color: '#2196f3' }} /></ListItemIcon>
+          <ListItemText primary="친구의 피드" sx={{ color: '#333' }} />
         </ListItem>
 
         {/* 마이페이지 */}
-        <ListItem button component={Link} to="/mypage">
-          <ListItemIcon>
-            <AccountCircle />
-          </ListItemIcon>
-          <ListItemText primary="마이페이지" />
+        <ListItem
+          button
+          component={Link}
+          to="/mypage"
+          sx={{
+            borderRadius: 3,
+            mb: 1,
+            transition: '0.3s',
+            '&:hover': { backgroundColor: '#f0e0fd', transform: 'scale(1.02)' }, // 연한 퍼플 포인트
+          }}
+        >
+          <ListItemIcon><AccountCircle sx={{ color: '#9c27b0' }} /></ListItemIcon>
+          <ListItemText primary="마이페이지" sx={{ color: '#333' }} />
         </ListItem>
 
-        {/* 내가 입은 옷 (착장 기록 목록) */}
-        <ListItem button component={Link} to="/ClothHistoryList">
-          <ListItemIcon>
-            <AccountCircle />
-          </ListItemIcon>
-          <ListItemText primary="내가 입은 옷" />
-        </ListItem>
-        
-        {/* 🌟 로그아웃 메뉴 항목 (onClick 이벤트에 함수 연결) */}
-        <ListItem 
-          button 
-          onClick={handleLogout} 
-          // 시각적 구분을 위해 위쪽 여백과 선 추가
-          sx={{ mt: 3, borderTop: '1px solid #eee' ,cursor : 'pointer'}} 
+        {/* 옷장 등록 */}
+        <ListItem
+          button
+          component={Link}
+          to="/register"
+          sx={{
+            borderRadius: 3,
+            mb: 1,
+            transition: '0.3s',
+            '&:hover': { backgroundColor: '#fde0e0', transform: 'scale(1.02)' }, // 연한 핑크 포인트
+          }}
         >
-          <ListItemIcon>
-            <ExitToApp color="error" /> {/* 로그아웃 아이콘 */}
-          </ListItemIcon>
-          <ListItemText primary="로그아웃" />
+          <ListItemIcon><Add sx={{ color: '#f06292' }} /></ListItemIcon>
+          <ListItemText primary="옷장 등록" sx={{ color: '#333' }} />
+        </ListItem>
+
+        {/* 내 옷장 */}
+        <ListItem
+          button
+          component={Link}
+          to="/ClothHistoryList"
+          sx={{
+            borderRadius: 3,
+            mb: 1,
+            transition: '0.3s',
+            '&:hover': { backgroundColor: '#e0fde0', transform: 'scale(1.02)' }, // 연한 민트 포인트
+          }}
+        >
+          <ListItemIcon><Checkroom sx={{ color: '#4caf50' }} /></ListItemIcon>
+          <ListItemText primary="내 옷장" sx={{ color: '#333' }} />
+        </ListItem>
+
+        <Divider sx={{ my: 2, borderColor: '#ddd' }} />
+
+        {/* 로그아웃 */}
+        <ListItem
+          button
+          onClick={handleLogout}
+          sx={{
+            borderRadius: 3,
+            transition: '0.3s',
+            '&:hover': { backgroundColor: '#ffdada', transform: 'scale(1.02)' }, // 레드 포인트
+          }}
+        >
+          <ListItemIcon><ExitToApp sx={{ color: '#d32f2f' }} /></ListItemIcon>
+          <ListItemText primary="로그아웃" sx={{ color: '#333' }} />
         </ListItem>
       </List>
     </Drawer>
   );
-};
+}
 
 export default Menu;

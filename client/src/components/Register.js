@@ -253,7 +253,7 @@ function Register() {
         sx={{ padding: '20px' }}
       >
         <Typography variant="h4" gutterBottom>
-          착장 기록 등록
+          내 옷장 등록
         </Typography>
 
         {/* 스타일 선택 (Style Selection) */}
@@ -369,7 +369,7 @@ function Register() {
           />
           <label htmlFor="file-upload">
             <IconButton color="primary" component="span">
-              <PhotoCamera />
+              <PhotoCamera sx={{color : '#457b9d'}}/>  
             </IconButton>
           </label>
           {files.length > 0 && (
@@ -385,7 +385,18 @@ function Register() {
         </Box>
 
         {/* 등록 버튼 */}
-        <Button onClick={fnFeedAdd} variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }}>
+        <Button 
+        sx={{
+              mt: 3,
+              py: 1.5,
+              borderRadius: 3,
+              background: 'linear-gradient(to right,  #457b9d)', // 민트 → 블루 그라데이션
+              color: '#fff',
+              fontWeight: 'bold',
+              letterSpacing: 1,
+              
+            }}
+        onClick={fnFeedAdd} variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }}>
           등록하기
         </Button>
       </Box>
