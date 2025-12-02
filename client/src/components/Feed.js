@@ -196,7 +196,7 @@ function Feed() {
           </Box>
 
           <Typography variant="body1" sx={{ mb: 1 }}>
-            **내용:** {selectedFeed?.CONTENTS}
+            {selectedFeed?.CONTENTS}
           </Typography>
 
           <Box sx={{ mt: 2, p: 1, borderTop: '1px solid #eee'}}>

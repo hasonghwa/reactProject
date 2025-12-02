@@ -25,7 +25,7 @@ function MyPage() {
     let [user, setUser] = useState(null); // 초기 상태를 null로 설정
     let navigate = useNavigate();
 
-    // 👇 [추가] 소개 수정 모달 상태
+    
     const [editOpen, setEditOpen] = useState(false);
     const [newIntro, setNewIntro] = useState('');
     const [currentUserId, setCurrentUserId] = useState(null); // 토큰에서 추출한 userId 저장
@@ -86,7 +86,7 @@ function MyPage() {
      
 
         // 🚨 중요: 백엔드에서 사용자 소개(INTRO)를 수정하는 PUT/PATCH API 경로가 필요합니다.
-        // 여기서는 예시로 PUT http://localhost:3015/user/intro를 사용합니다.
+
 
         const token = localStorage.getItem("token");
         console.log("Saving Intro. UserID:", currentUserId); // 👈 로그 1

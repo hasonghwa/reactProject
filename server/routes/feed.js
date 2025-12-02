@@ -140,7 +140,7 @@ router.get("/:ID", async (req, res) => {
             INNER JOIN COLOR CO ON CH.COLOR_ID = CO.COLOR_ID
             LEFT JOIN PART P ON CH.PART_ID = P.PART_ID
             LEFT JOIN TBL_FEED_IMG FI ON FI.FEEDID = CH.HISTORY_ID
-            WHERE CH.USERID = 'test2'
+            WHERE CH.USERID = ?
             GROUP BY CH.HISTORY_ID
             ORDER BY CH.HISTORY_ID DESC
         `;
@@ -246,4 +246,30 @@ router.put('/intro', authMiddleware, async (req, res) => { // authMiddleware는 
 });
 
 
+//프로필 이미지 저장
+
+// router.put('/putImage', authMiddleware, upload.single('file'), async (req, res) => {
+//     const userId = req.user.userId; // authMiddleware에서 추출
+//     const file = req.file;
+
+//     if (!file) return res.status(400).json({ result: "fail", msg: "파일이 없습니다." });
+
+//     try {
+//         const imgPath = `${req.protocol}://${req.get("host")}/putImage/${file.filename}`;
+
+//         // DB 업데이트 (기존 이미지 있는 경우 UPDATE, 없으면 INSERT)
+//         const [existing] = await db.query("SELECT * FROM PROFILE_IMG WHERE imgId=?", [userId]);
+
+//         if (existing.length > 0) {
+//             await db.query("UPDATE PROFILE_IMG SET imgName=?, imgPath=? WHERE imgId=?", [file.filename, imgPath, userId]);
+//         } else {
+//             await db.query("INSERT INTO PROFILE_IMG (imgId, imgName, imgPath) VALUES (?, ?, ?)", [userId, file.filename, imgPath]);
+//         }
+
+//         res.json({ result: "success", imgPath });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ result: "fail", msg: "서버 오류" });
+//     }
+// });
 module.exports = router;

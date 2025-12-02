@@ -1,17 +1,6 @@
-; INSERT INTO SEASON (SEASON_ID, SEASON) VALUES
-; (1, '봄'),
-; (2, '여름'),
-; (3, '가을'),
-; (4, '겨울');
 
 
-; CREATE TABLE PART (
-;     PART_ID INT PRIMARY KEY,
-;     KIND VARCHAR(50)
-    
-; );
-
-INSERT INTO PART (PART_ID, KIND) VALUES
+INSERT INTO PART (PART_ID, PART) VALUES
 (1, '상의'),
 (2, '하의'),
 (3, '모자'),
@@ -136,7 +125,7 @@ select * from style_color_weight
 create table clothHistory(
 HISTORY_ID INT PRIMARY KEY AUTO_INCREMENT,
 STYLE VARCHAR(50) NOT NULL,
-KIND VARCHAR(50) NOT NULL,
+PART VARCHAR(50) NOT NULL,
 CATEGORY VARCHAR(50) NOT NULL,
 COLOR VARCHAR(50) NOT NULL,
 TITLE VARCHAR(30),
@@ -162,10 +151,10 @@ SELECT * FROM CLOTHHISTORY
 DROP TABLE IF EXISTS PART;
 CREATE TABLE PART (
     PART_ID INT PRIMARY KEY,
-    KIND VARCHAR(50) NOT NULL
+    PART VARCHAR(50) NOT NULL
 );
 
-INSERT INTO PART (PART_ID, KIND) VALUES
+INSERT INTO PART (PART_ID, PART) VALUES
 (1, '상의'),
 (2, '하의'),
 (3, '모자'),
@@ -334,3 +323,34 @@ CREATE TABLE CLOTHHISTORY (
     FOREIGN KEY (COLOR_ID) REFERENCES COLOR(COLOR_ID),
     FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(CATEGORY_ID)
 )
+
+
+
+CREATE TABLE tbl_feed_img (
+    imgNo INT AUTO_INCREMENT PRIMARY KEY,   -- 이미지 고유 번호
+    feedId INT NOT NULL,                    -- 해당 피드 번호 (외래키로 설정할 수 있음)
+    imgName VARCHAR(255) NOT NULL,          -- 이미지 파일 이름
+    imgPath VARCHAR(500) NOT NULL           -- 이미지 파일 경로
+);
+
+
+
+--------------AI쿼리
+-- PART_HISTORY 테이블 (CLOTHHISTORY와 PART 연결)
+CREATE TABLE PART_HISTORY (
+    HISTORY_ID INT NOT NULL,
+    PART_ID INT NOT NULL,
+    PRIMARY KEY (HISTORY_ID, PART_ID),
+    FOREIGN KEY (HISTORY_ID) REFERENCES CLOTHHISTORY(HISTORY_ID),
+    FOREIGN KEY (PART_ID) REFERENCES PART(PART_ID)
+);
+--------------------------------------------------------------------
+
+//프로필 이미지 수정
+CREATE TABLE profile_img(
+imgNo int NOT NULL auto_increment primary key,
+imgId int NOT NULL ,
+imgName varchar(500) not null,
+imgPath varchar(500) null
+);
+select * from profile_img;

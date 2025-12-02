@@ -23,9 +23,9 @@ router.post("/join", async (req, res) => {
             + " VALUES (?, ?, ?, ?, ?, ?)";
         let result = await db.query(sql, [userId, hashPwd, nickName, phone, name, birth]);
         res.json({
-            result: result,
-
-            msg: "가입성공"
+            result: "success",
+            msg: "회원 가입성공!",
+           
         })
        
     } catch (error) {
