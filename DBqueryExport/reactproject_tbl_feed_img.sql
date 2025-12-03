@@ -1,0 +1,53 @@
+-- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
+--
+-- Host: localhost    Database: reactproject
+-- ------------------------------------------------------
+-- Server version	8.0.44
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `tbl_feed_img`
+--
+
+DROP TABLE IF EXISTS `tbl_feed_img`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_feed_img` (
+  `imgNo` int NOT NULL AUTO_INCREMENT,
+  `feedId` int NOT NULL,
+  `imgName` varchar(255) NOT NULL,
+  `imgPath` varchar(500) NOT NULL,
+  PRIMARY KEY (`imgNo`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_feed_img`
+--
+
+LOCK TABLES `tbl_feed_img` WRITE;
+/*!40000 ALTER TABLE `tbl_feed_img` DISABLE KEYS */;
+INSERT INTO `tbl_feed_img` VALUES (17,24,'1764580019153-ì¤ë¥.PNG','http://localhost:3015/uploads/1764580019153-ì¤ë¥.PNG'),(18,26,'1764580046712-ã¹ãã¹ã.PNG','http://localhost:3015/uploads/1764580046712-ã¹ãã¹ã.PNG'),(19,27,'1764580060748-ã¹ãã¹ã.PNG','http://localhost:3015/uploads/1764580060748-ã¹ãã¹ã.PNG'),(20,30,'1764636607429-20259251558799.png','http://localhost:3015/uploads/1764636607429-20259251558799.png'),(21,33,'1764643673531-20259251558799.png','http://localhost:3015/uploads/1764643673531-20259251558799.png'),(22,36,'1764645083414-ã¹ãã¹ã.PNG','http://localhost:3015/uploads/1764645083414-ã¹ãã¹ã.PNG'),(23,38,'1764645137873-20259251558799.png','http://localhost:3015/uploads/1764645137873-20259251558799.png'),(24,40,'1764648041733-ã¹ãã¹ã.PNG','http://localhost:3015/uploads/1764648041733-ã¹ãã¹ã.PNG'),(25,41,'1764657656311-20259251558799.png','http://localhost:3015/uploads/1764657656311-20259251558799.png'),(26,43,'1764660584228-20259251558799.png','http://localhost:3015/uploads/1764660584228-20259251558799.png'),(27,44,'1764660599114-20259251558799.png','http://localhost:3015/uploads/1764660599114-20259251558799.png'),(28,45,'1764660608893-ã¹ãã¹ã.PNG','http://localhost:3015/uploads/1764660608893-ã¹ãã¹ã.PNG'),(29,46,'1764660618412-20259251558799.png','http://localhost:3015/uploads/1764660618412-20259251558799.png'),(30,48,'1764667165433-20259251558799.png','http://localhost:3015/uploads/1764667165433-20259251558799.png'),(31,51,'1764722978411-20259251558799.png','http://localhost:3015/uploads/1764722978411-20259251558799.png'),(32,55,'1764726578790-20259251558799.png','http://localhost:3015/uploads/1764726578790-20259251558799.png');
+/*!40000 ALTER TABLE `tbl_feed_img` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-12-03 10:55:43
