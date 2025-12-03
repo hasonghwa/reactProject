@@ -53,7 +53,7 @@ function Join() {
       const data = await response.json();
       if (data.result === "success") {
         alert("회원가입 성공!");
-        navigate("/login");
+        navigate("/");
       } else {
         alert(data.msg || "입력값을 다시 확인해주세요.");
       }

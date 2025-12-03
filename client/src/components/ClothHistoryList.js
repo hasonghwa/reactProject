@@ -12,6 +12,7 @@ import {
   DialogContent,
   IconButton,
   Button,
+  Stack
 } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
@@ -90,74 +91,70 @@ function ClothHistoryList() {
 
   if (loading) {
     return (
-      <Container sx={{ textAlign: "center", marginTop: 4 }}>
+      <Container sx={{ textAlign: "center", mt: 6 }}>
         <CircularProgress />
-        <Typography variant="body1" sx={{ mt: 2, color: "#555" }}>로딩 중...</Typography>
+        <Typography variant="body1" mt={2} color="#555">
+          로딩 중...
+        </Typography>
       </Container>
     );
   }
 
   if (error) {
     return (
-      <Container sx={{ textAlign: "center", marginTop: 4 }}>
-        <Typography variant="body1" color="error">
-          {error}
-        </Typography>
+      <Container sx={{ textAlign: "center", mt: 6 }}>
+        <Typography variant="body1" color="error">{error}</Typography>
       </Container>
     );
   }
 
   if (clothList.length === 0) {
     return (
-      <Container sx={{ textAlign: "center", marginTop: 4 }}>
-        <Typography variant="h6" sx={{ color: "#555" }}>저장된 옷 기록이 없습니다.</Typography>
+      <Container sx={{ textAlign: "center", mt: 6 }}>
+        <Typography variant="h6" color="#555">저장된 옷 기록이 없습니다.</Typography>
       </Container>
     );
   }
 
-  const clothWithImages = clothList.filter(
-    (cloth) => cloth.IMAGES && cloth.IMAGES.length > 0
-  );
-  const clothWithoutImages = clothList.filter(
-    (cloth) => !cloth.IMAGES || cloth.IMAGES.length === 0
-  );
+  const clothWithImages = clothList.filter((cloth) => cloth.IMAGES && cloth.IMAGES.length > 0);
+  const clothWithoutImages = clothList.filter((cloth) => !cloth.IMAGES || cloth.IMAGES.length === 0);
 
   return (
-    <Container sx={{ marginTop: 4 }}>
-      <Typography variant="h4" gutterBottom sx={{ color: "#333" }}>
+    <Container sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom fontWeight="bold" color="#333">
         내 옷장
       </Typography>
 
-      {/* 이미지 있는 피드 */}
+      {/* 이미지 있는 카드 */}
       {clothWithImages.length > 0 && (
         <>
-          <Typography variant="h5" sx={{ mt: 2, mb: 1, color: "#555" }}>
-            📸
-          </Typography>
+          <Typography variant="h5" mt={2} mb={1} color="#555">📸</Typography>
           <Grid container spacing={3}>
             {clothWithImages.map((cloth) => (
               <Grid item xs={12} sm={6} md={4} key={cloth.HISTORY_ID}>
                 <Card
                   onClick={() => handleClickOpen(cloth)}
-                  sx={{ cursor: "pointer", boxShadow: 2 }}
+                  sx={{
+                    cursor: "pointer",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    "&:hover": { transform: "scale(1.03)", boxShadow: 6 },
+                    borderRadius: 3
+                  }}
                 >
                   <CardMedia
                     component="img"
                     height="180"
                     image={cloth.IMAGES[0]}
                     alt={cloth.TITLE}
+                    sx={{ objectFit: "cover", borderTopLeftRadius: 12, borderTopRightRadius: 12 }}
                   />
                   <CardContent>
-                    <Typography variant="h6" sx={{ color: "#333" }}>{cloth.TITLE}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      스타일: {cloth.STYLE_NAME}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      옷 부위: {cloth.PART_NAME}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      색상: {cloth.COLOR_NAME}
-                    </Typography>
+                    <Typography variant="h6" fontWeight="bold" color="#333">{cloth.TITLE}</Typography>
+                    <Stack spacing={0.5} mt={1}>
+                      <Typography variant="body2" color="text.secondary">스타일: {cloth.STYLE_NAME}</Typography>
+                      <Typography variant="body2" color="text.secondary">옷 부위: {cloth.PART_NAME}</Typography>
+                      <Typography variant="body2" color="text.secondary">색상: {cloth.COLOR_NAME}</Typography>
+                    </Stack>
                   </CardContent>
                 </Card>
               </Grid>
@@ -166,30 +163,30 @@ function ClothHistoryList() {
         </>
       )}
 
-      {/* 이미지 없는 피드 */}
+      {/* 이미지 없는 카드 */}
       {clothWithoutImages.length > 0 && (
         <>
-          <Typography variant="h5" sx={{ mt: 4, mb: 1, color: "#555" }}>
-            📸 ❌
-          </Typography>
+          <Typography variant="h5" mt={4} mb={1} color="#555">📸 ❌</Typography>
           <Grid container spacing={3}>
             {clothWithoutImages.map((cloth) => (
               <Grid item xs={12} sm={6} md={4} key={cloth.HISTORY_ID}>
                 <Card
                   onClick={() => handleClickOpen(cloth)}
-                  sx={{ cursor: "pointer", boxShadow: 2 }}
+                  sx={{
+                    cursor: "pointer",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    "&:hover": { transform: "scale(1.03)", boxShadow: 6 },
+                    borderRadius: 3,
+                    minHeight: 200
+                  }}
                 >
                   <CardContent>
-                    <Typography variant="h6" sx={{ color: "#333" }}>{cloth.TITLE}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      스타일: {cloth.STYLE_NAME}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      옷 부위: {cloth.PART_NAME}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      색상: {cloth.COLOR_NAME}
-                    </Typography>
+                    <Typography variant="h6" fontWeight="bold" color="#333">{cloth.TITLE}</Typography>
+                    <Stack spacing={0.5} mt={1}>
+                      <Typography variant="body2" color="text.secondary">스타일: {cloth.STYLE_NAME}</Typography>
+                      <Typography variant="body2" color="text.secondary">옷 부위: {cloth.PART_NAME}</Typography>
+                      <Typography variant="body2" color="text.secondary">색상: {cloth.COLOR_NAME}</Typography>
+                    </Stack>
                   </CardContent>
                 </Card>
               </Grid>
@@ -200,65 +197,56 @@ function ClothHistoryList() {
 
       {/* 상세보기 모달 */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogTitle sx={{ color: "#333" }}>
+        <DialogTitle sx={{ p: 2, color: "#333", position: "relative" }}>
           {selectedCloth?.TITLE}
           <IconButton
             edge="end"
             color="inherit"
             onClick={handleClose}
-            aria-label="close"
             sx={{ position: "absolute", right: 8, top: 8 }}
           >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-
         <DialogContent dividers>
           <Box sx={{ mb: 2 }}>
             {selectedCloth?.IMAGES?.length > 0 ? (
               <img
                 src={selectedCloth.IMAGES[0]}
                 alt={selectedCloth.TITLE}
-                style={{ width: "100%", maxHeight: "400px", objectFit: "contain", borderRadius: 4 }}
+                style={{ width: "100%", maxHeight: 400, objectFit: "cover", borderRadius: 8 }}
               />
             ) : (
-              <Typography
-                variant="subtitle2"
-                color="text.disabled"
-                align="center"
-                sx={{ p: 3, border: "1px dashed #ccc", borderRadius: 2 }}
-              >
-                등록된 이미지가 없습니다.
-              </Typography>
+              <Box sx={{ p: 3, border: "1px dashed #ccc", borderRadius: 2, textAlign: "center" }}>
+                <Typography variant="subtitle2" color="text.disabled">
+                  등록된 이미지가 없습니다.
+                </Typography>
+              </Box>
             )}
           </Box>
 
-          <Typography variant="body1" sx={{ mb: 1, color: "#444" }}>
+          <Typography variant="body1" color="#444" mb={2}>
             {selectedCloth?.CONTENTS}
           </Typography>
 
-          <Box sx={{ mt: 2, p: 1, borderTop: "1px solid #eee" }}>
-            <Typography variant="body2" color="text.secondary">
-              스타일: {selectedCloth?.STYLE_NAME}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              옷 부위: {selectedCloth?.PART_NAME}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              색상: {selectedCloth?.COLOR_NAME}
-            </Typography>
+          <Box sx={{ p: 2, borderTop: "1px solid #eee", borderRadius: 2 }}>
+            <Typography variant="body2" color="text.secondary">스타일: {selectedCloth?.STYLE_NAME}</Typography>
+            <Typography variant="body2" color="text.secondary">옷 부위: {selectedCloth?.PART_NAME}</Typography>
+            <Typography variant="body2" color="text.secondary">색상: {selectedCloth?.COLOR_NAME}</Typography>
           </Box>
         </DialogContent>
 
-        <Box sx={{ p: 2, textAlign: "right" }}>
+        <Box sx={{ p: 2, display: "flex", justifyContent: "flex-end" }}>
           <Button
+       
+            variant="contained"
+            color="primary"
             onClick={() => {
               const historyIdToDelete = selectedCloth?.HISTORY_ID;
-              if (!historyIdToDelete) {
-                alert("삭제할 항목의 ID를 찾을 수 없습니다.");
-                return;
-              }
+              if (!historyIdToDelete) return alert("삭제할 항목의 ID가 없습니다.");
 
+
+              if(window.confirm("정말 삭제하시겠습니까?")){
               fetch(`${API_URL}/${historyIdToDelete}`, {
                 method: "DELETE",
                 headers: {
@@ -278,9 +266,10 @@ function ClothHistoryList() {
                   console.error("삭제 오류:", err);
                   alert("삭제 중 오류가 발생했습니다.");
                 });
+                }else{
+                  alert("삭제가 취소되었습니다.");
+                }
             }}
-            variant="contained"
-            color="primary"
           >
             삭제
           </Button>
