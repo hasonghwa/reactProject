@@ -51,12 +51,12 @@
   </ul>
 
 <hr>
-<h4>🔨사용툴</h4>
+<h3>🔨사용툴</h3>
 
 >react, MYSQL
 
 ---
-<ul> 👀상세보기 </ul>
+<h3> 🔍상세보기 </h3>
 <ul>○ 홈페이지에 로그인 합니다.</ul>
 
 ![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/reactLogin.PNG)
