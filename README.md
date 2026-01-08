@@ -54,25 +54,36 @@
 <h4>🔨사용툴</h4>
 
 >react, MYSQL
+
 ---
+<ul> 👀상세보기 </ul>
+<ul>○ 홈페이지에 로그인 합니다.</ul>
 
 ![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/reactLogin.PNG)
 
 ---
+
+<ul>○ 나의 옷 리스트를 확인 할 수 있습니다.</ul>
 
 ![이미지네임](
 https://github.com/hasonghwa/reactProject/blob/main/clothList.PNG)
 
 ---
 
+<ul>○ 내 정보를 확인할 수 있습니다.</ul>
+
 ![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/mypage.PNG
 )
 
 ---
 
+<ul>○ 친구의 피드를 참고하여 스타일 확인이 가능합니다.</ul>
+
 ![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/feed.PNG)
 
 ---
+
+<ul>○ 마음에 들었던 착장을 사진으로 올리고 등록할 수 있습니다.</ul>
 
 ![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/register.PNG)
 
