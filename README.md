@@ -15,6 +15,14 @@
   <li>내 소개를 자유롭게 수정 할 수 있습니다.</li>
 </ul>
 <hr>
+<h3>🔧사용 기술</h3>
+<p>
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white"/>
+<img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge&logo=css&logoColor=white"/>
+  <img src="https://img.shields.io/badge/DataBase-3366CC?style=for-the-badge&logo=database&logoColor=white"/>
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white"/>
+</p>
+<hr>
 <h3>👀간단한 앱 소개</h3>
 <br>
   1. 로그인/회원가입
@@ -59,34 +67,38 @@
 <h3> 🔍상세보기 </h3>
 <ul>○ 홈페이지에 로그인 합니다.</ul>
 
-![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/reactLogin.PNG)
+<img src=https://github.com/hasonghwa/reactProject/blob/main/reactLogin.PNG width=400>
 
 ---
 
 <ul>○ 나의 옷 리스트를 확인 할 수 있습니다.</ul>
 
-![이미지네임](
-https://github.com/hasonghwa/reactProject/blob/main/clothList.PNG)
+<img src=https://github.com/hasonghwa/reactProject/blob/main/clothList.PNG width=400>
 
 ---
 
 <ul>○ 내 정보를 확인할 수 있습니다.</ul>
 
-![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/mypage.PNG
-)
+<img src=https://github.com/hasonghwa/reactProject/blob/main/mypage.PNG width=400>
 
 ---
 
 <ul>○ 친구의 피드를 참고하여 스타일 확인이 가능합니다.</ul>
 
-![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/feed.PNG)
+<img src=https://github.com/hasonghwa/reactProject/blob/main/feed.PNG width=400>
 
 ---
 
 <ul>○ 마음에 들었던 착장을 사진으로 올리고 등록할 수 있습니다.</ul>
 
-![이미지네임](https://github.com/hasonghwa/reactProject/blob/main/register.PNG)
+<img src=https://github.com/hasonghwa/reactProject/blob/main/register.PNG width=400>
 
+---
+<h3>👢후기</h3>
+두번째로 한 개인프로젝트. 개인적으로 나는 html보다 react가 코드의 자유성이 있어서 그런지 편하게 작업할 수 있었다.
+자율성이 큰 만큼 코드는 몇배는 더 배우기 어렵다고 선생님은 말씀하셨지만 나는 다른 문법보다 더 배우기 쉽다고 느꼈다.
+무엇보다 프론트와 백엔드 코드가 한 폴더에 다 같이 있었기에 페이지 이동을 여러 번 하지 않아도 되서 편했다.
+css, DB설계 등 다른 능력도 향상 되었지만 무엇보다 전과 확실히 비교되는 코딩실력이 보여서 뿌듯했다.
 
 
 
